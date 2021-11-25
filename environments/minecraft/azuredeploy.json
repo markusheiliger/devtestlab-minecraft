@@ -4,10 +4,10 @@
 	"parameters": {
 	  "_artifactsLocation": {
 		"type": "string",
+		"defaultValue": "[deployment().properties.templateLink.uri]",
 		"metadata": {
 		  "description": "The base URI where artifacts required by this template are located. For example, if stored on a public GitHub repo, you'd use the following URI: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/minecraft-on-ubuntu/."
-		},
-		"defaultValue": "[deployment().properties.templateLink.uri]"
+		}
 	  },
 	  "_artifactsLocationSasToken": {
 		"type": "securestring",
@@ -110,7 +110,7 @@
 	  },
 	  "minecraftLauncherLocation": {
 		"type": "string",
-		"defaultValue": "https://launcher.mojang.com/v1/objects/ae583fd57a8c07f2d6fbadce1ce1e1379bf4b32d/server.jar",
+		"defaultValue": "https://launcher.mojang.com/v1/objects/a16d67e5807f57fc4e550299cf20226194497dc2/server.jar",
 		"metadata": {
 		  "description": "Location of the Minecraft server .jar launcher"
 		}
