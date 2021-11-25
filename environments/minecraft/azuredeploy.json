@@ -281,7 +281,7 @@
 							"fileUris": [
 								"[concat(parameters('_artifactsLocation'), '/azuredeploy.sh', parameters('_artifactsLocationSasToken'))]"
 							],
-							"commandToExecute": "[concat('find ./ -type f -name azuredeploy.sh -exec bash \"{}\" ', parameters('minecraftUser'), '\" \"', parameters('difficulty'), '\" \"', parameters('level-name'), '\" \"', parameters('game-mode'), '\" \"', parameters('white-list'), '\" \"', parameters('enable-command-block'), '\" \"', parameters('spawn-monsters'), '\" \"', parameters('generate-structures'), '\" \"', uniqueString(resourceGroup().id), '\" \"', variables('launcher'), '\" \\;')]"
+							"commandToExecute": "[concat('find ./ -type f -name azuredeploy.sh -exec bash \"{}\" \"', parameters('minecraftUser'), '\" \"', parameters('difficulty'), '\" \"', parameters('level-name'), '\" \"', parameters('game-mode'), '\" \"', parameters('white-list'), '\" \"', parameters('enable-command-block'), '\" \"', parameters('spawn-monsters'), '\" \"', parameters('generate-structures'), '\" \"', uniqueString(resourceGroup().id), '\" \"', variables('launcher'), '\" \\;')]"
 						}
 					}
 				}
