@@ -2,18 +2,10 @@
 	"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
 	"contentVersion": "1.0.0.0",
 	"parameters": {
-	  "_artifactsLocation": {
+	  "minecraftUser": {
 		"type": "string",
-		"defaultValue": "[deployment().properties.templateLink.uri]",
 		"metadata": {
-		  "description": "The base URI where artifacts required by this template are located. For example, if stored on a public GitHub repo, you'd use the following URI: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/minecraft-on-ubuntu/."
-		}
-	  },
-	  "_artifactsLocationSasToken": {
-		"type": "securestring",
-		"defaultValue": "",
-		"metadata": {
-		  "description": "The sasToken required to access _artifactsLocation.  If your artifacts are stored on a public repo or public storage account you can leave this blank."
+		  "description": "Your Minecraft user name"
 		}
 	  },
 	  "adminUsername": {
@@ -115,19 +107,6 @@
 		  "description": "Location of the Minecraft server .jar launcher"
 		}
 	  },
-	  "location": {
-		"type": "string",
-		"defaultValue": "[resourceGroup().location]",
-		"metadata": {
-		  "description": "Location for all resources."
-		}
-	  },
-	  "minecraftUser": {
-		"type": "string",
-		"metadata": {
-		  "description": "Your Minecraft user name"
-		}
-	  },
 	  "spawn-monsters": {
 		"type": "string",
 		"defaultValue": "true",
@@ -155,6 +134,20 @@
 		],
 		"metadata": {
 		  "description": "Only ops and whitelisted players can connect"
+		}
+	  },
+	  "_artifactsLocation": {
+		"type": "string",
+		"defaultValue": "[deployment().properties.templateLink.uri]",
+		"metadata": {
+		  "description": "The base URI where artifacts required by this template are located. For example, if stored on a public GitHub repo, you'd use the following URI: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/minecraft-on-ubuntu/."
+		}
+	  },
+	  "_artifactsLocationSasToken": {
+		"type": "securestring",
+		"defaultValue": "",
+		"metadata": {
+		  "description": "The sasToken required to access _artifactsLocation.  If your artifacts are stored on a public repo or public storage account you can leave this blank."
 		}
 	  }
 	},
@@ -190,7 +183,7 @@
 		"type": "Microsoft.Compute/virtualMachines/extensions",
 		"name": "[concat(variables('vmName'),'/newuserscript')]",
 		"apiVersion": "2020-12-01",
-		"location": "[parameters('location')]",
+		"location": "[resourceGroup().location]",
 		"dependsOn": [
 		  "[resourceId('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
 		],
@@ -211,7 +204,7 @@
 		"apiVersion": "2020-11-01",
 		"type": "Microsoft.Network/networkSecurityGroups",
 		"name": "[variables('networkSecurityGroupName')]",
-		"location": "[parameters('location')]",
+		"location": "[resourceGroup().location]",
 		"properties": {
 		  "securityRules": [
 			{
@@ -249,7 +242,7 @@
 		"apiVersion": "2020-11-01",
 		"type": "Microsoft.Network/networkInterfaces",
 		"name": "[variables('nicName')]",
-		"location": "[parameters('location')]",
+		"location": "[resourceGroup().location]",
 		"dependsOn": [
 		  "[resourceId('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]",
 		  "[resourceId('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
@@ -275,7 +268,7 @@
 		"apiVersion": "2020-11-01",
 		"type": "Microsoft.Network/publicIPAddresses",
 		"name": "[variables('publicIPAddressName')]",
-		"location": "[parameters('location')]",
+		"location": "[resourceGroup().location]",
 		"properties": {
 		  "publicIPAllocationMethod": "[variables('publicIPAddressType')]",
 		  "dnsSettings": {
@@ -287,7 +280,7 @@
 		"apiVersion": "2020-11-01",
 		"type": "Microsoft.Network/virtualNetworks",
 		"name": "[variables('virtualNetworkName')]",
-		"location": "[parameters('location')]",
+		"location": "[resourceGroup().location]",
 		"dependsOn": [
 		  "[resourceId('Microsoft.Network/networkSecurityGroups/', variables('networkSecurityGroupName'))]"
 		],
@@ -314,7 +307,7 @@
 		"apiVersion": "2020-12-01",
 		"type": "Microsoft.Compute/virtualMachines",
 		"name": "[variables('vmName')]",
-		"location": "[parameters('location')]",
+		"location": "[resourceGroup().location]",
 		"dependsOn": [
 		  "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
 		],
