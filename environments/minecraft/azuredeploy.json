@@ -127,7 +127,7 @@
 		"imageOffer": "UbuntuServer",
 		"imagePublisher": "Canonical",
 		"imageVersion": "18.04-LTS",
-		
+
 		"linuxConfiguration": {
 			"disablePasswordAuthentication": true,
 			"ssh": {
@@ -262,28 +262,30 @@
 						}
 					]
 				}
-			}
-		},
-		{
-			"type": "Microsoft.Compute/virtualMachines/extensions",
-			"name": "[concat(variables('vmName'),'/', guid(resourceGroup().id))]",
-			"apiVersion": "2020-12-01",
-			"location": "[resourceGroup().location]",
-			"dependsOn": [
-				"[resourceId('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
-			],
-			"properties": {
-				"publisher": "Microsoft.Azure.Extensions",
-				"type": "CustomScript",
-				"typeHandlerVersion": "2.0",
-				"autoUpgradeMinorVersion": true,
-				"settings": {
-					"fileUris": [
-						"[uri(parameters('_artifactsLocation'), concat('install.sh', parameters('_artifactsLocationSasToken')))]"
+			},
+			"resources": [
+				{
+					"type": "extensions",
+					"name": "initialize",
+					"apiVersion": "2019-03-01",
+					"location": "[resourceGroup().location]",
+					"dependsOn": [
+						"[resourceId('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
 					],
-					"commandToExecute": "[concat('bash install.sh ', parameters('minecraftUser'), ' ', parameters('difficulty'), ' ', parameters('level-name'), ' ', parameters('game-mode'), ' ', parameters('white-list'), ' ', parameters('enable-command-block'), ' ', parameters('spawn-monsters'), ' ', parameters('generate-structures'), ' ', uniqueString(resourceGroup().id), ' ', variables('launcher'))]"
+					"properties": {
+						"publisher": "Microsoft.Azure.Extensions",
+						"type": "CustomScript",
+						"typeHandlerVersion": "2.1",
+						"autoUpgradeMinorVersion": true,
+						"settings": {
+							"fileUris": [
+								"[concat(parameters('_artifactsLocation'), '/azuredeploy.sh', parameters('_artifactsLocationSasToken'))]"
+							],
+							"commandToExecute": "[concat('find ./ -type f -name azuredeploy.sh -exec bash \"{}\" ', parameters('minecraftUser'), '\" \"', parameters('difficulty'), '\" \"', parameters('level-name'), '\" \"', parameters('game-mode'), '\" \"', parameters('white-list'), '\" \"', parameters('enable-command-block'), '\" \"', parameters('spawn-monsters'), '\" \"', parameters('generate-structures'), '\" \"', uniqueString(resourceGroup().id), '\" \"', variables('launcher'), '\" \\;')]"
+						}
+					}
 				}
-			}
+			]
 		}
 	]
 }
