@@ -44,13 +44,6 @@
 				"description": "0 - Peaceful, 1 - Easy, 2 - Normal, 3 - Hard"
 			}
 		},
-		"dnsNameForPublicIP": {
-			"type": "string",
-			"defaultValue": "[concat('mc-', uniqueString(resourceGroup().id))]",
-			"metadata": {
-				"description": "Put a unique DNS Name for the Public IP used to access the Virtual Machine."
-			}
-		},
 		"enable-command-block": {
 			"type": "string",
 			"defaultValue": "false",
@@ -183,7 +176,7 @@
 			"properties": {
 				"publicIPAllocationMethod": "Dynamic",
 				"dnsSettings": {
-					"domainNameLabel": "[toLower(parameters('dnsNameForPublicIP'))]"
+					"domainNameLabel": "[toLower(variables('resourcePrefix'))]"
 				}
 			}
 		},
