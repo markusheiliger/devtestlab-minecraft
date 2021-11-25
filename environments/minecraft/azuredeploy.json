@@ -16,21 +16,21 @@
 		  "description": "The sasToken required to access _artifactsLocation.  If your artifacts are stored on a public repo or public storage account you can leave this blank."
 		}
 	  },
-	  "adminPasswordOrKey": {
-		"type": "securestring",
-		"metadata": {
-		  "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
-		}
-	  },
 	  "adminUsername": {
 		"type": "string",
 		"metadata": {
 		  "description": "Admin user name you will use to log on to the Virtual Machine."
 		}
 	  },
+	  "adminPasswordOrKey": {
+		"type": "securestring",
+		"metadata": {
+		  "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+		}
+	  },
 	  "authenticationType": {
 		"type": "string",
-		"defaultValue": "sshPublicKey",
+		"defaultValue": "password",
 		"allowedValues": [
 		  "sshPublicKey",
 		  "password"
@@ -102,14 +102,14 @@
 	  },
 	  "level-seed": {
 		"type": "string",
-		"defaultValue": " ",
+		"defaultValue": "[uniqueString(resourceGroup().id)]",
 		"metadata": {
 		  "description": "Add a seed for your world"
 		}
 	  },
 	  "minecraftLauncherLocation": {
 		"type": "string",
-		"defaultValue": "https://launcher.mojang.com/v1/objects/a16d67e5807f57fc4e550299cf20226194497dc2/server.jar",
+		"defaultValue": "https://launcher.mojang.com/v1/objects/ae583fd57a8c07f2d6fbadce1ce1e1379bf4b32d/server.jar",
 		"metadata": {
 		  "description": "Location of the Minecraft server .jar launcher"
 		}
@@ -147,7 +147,7 @@
 	  },
 	  "white-list": {
 		"type": "string",
-		"defaultValue": "false",
+		"defaultValue": "true",
 		"allowedValues": [
 		  "false",
 		  "true"
