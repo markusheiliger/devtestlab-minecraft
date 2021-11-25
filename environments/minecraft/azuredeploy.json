@@ -116,7 +116,7 @@
 			}
 		},
 		"_artifactsLocationSasToken": {
-			"type": "securestring",
+			"type": "string",
 			"defaultValue": "",
 			"metadata": {
 				"description": "The sasToken required to access _artifactsLocation.  If your artifacts are stored on a public repo or public storage account you can leave this blank."
