@@ -55,7 +55,7 @@
 				"description": "enable command blocks"
 			}
 		},
-		"gamemode": {
+		"game-mode": {
 			"type": "string",
 			"defaultValue": "0",
 			"allowedValues": [
@@ -86,20 +86,6 @@
 				"description": "Name of your world"
 			}
 		},
-		"level-seed": {
-			"type": "string",
-			"defaultValue": "[uniqueString(resourceGroup().id)]",
-			"metadata": {
-				"description": "Add a seed for your world"
-			}
-		},
-		"minecraftLauncherLocation": {
-			"type": "string",
-			"defaultValue": "https://launcher.mojang.com/v1/objects/a16d67e5807f57fc4e550299cf20226194497dc2/server.jar",
-			"metadata": {
-				"description": "Location of the Minecraft server .jar launcher"
-			}
-		},
 		"spawn-monsters": {
 			"type": "string",
 			"defaultValue": "true",
@@ -109,13 +95,6 @@
 			],
 			"metadata": {
 				"description": "Enables monster spawning"
-			}
-		},
-		"virtualMachineSize": {
-			"type": "string",
-			"defaultValue": "Standard_D2s_v3",
-			"metadata": {
-				"description": "This is the Azure Virtual Machine size, and will affect the cost. If you don't know, just leave the default value."
 			}
 		},
 		"white-list": {
@@ -165,7 +144,9 @@
 		"nsgName": "[concat(variables('resourcePrefix'), 'nsg')]",
 		"nicName": "[concat(variables('resourcePrefix'), 'nic')]",
 		"pipName": "[concat(variables('resourcePrefix'), 'pip')]",
-		"vmName": "[concat(variables('resourcePrefix'), 'vm')]"
+		"vmName": "[concat(variables('resourcePrefix'), 'vm')]",
+
+		"launcher": "https://launcher.mojang.com/v1/objects/a16d67e5807f57fc4e550299cf20226194497dc2/server.jar"
 	},
 	"resources": [
 		{
@@ -253,7 +234,7 @@
 			],
 			"properties": {
 				"hardwareProfile": {
-					"vmSize": "[parameters('virtualMachineSize')]"
+					"vmSize": "Standard_D2s_v3"
 				},
 				"osProfile": {
 					"computerName": "[variables('vmName')]",
@@ -300,7 +281,7 @@
 					"fileUris": [
 						"[uri(parameters('_artifactsLocation'), concat('install.sh', parameters('_artifactsLocationSasToken')))]"
 					],
-					"commandToExecute": "[concat('bash install.sh ', parameters('minecraftUser'), ' ', parameters('difficulty'), ' ', parameters('level-name'), ' ', parameters('gamemode'), ' ', parameters('white-list'), ' ', parameters('enable-command-block'), ' ', parameters('spawn-monsters'), ' ', parameters('generate-structures'), ' ', parameters('level-seed'), ' ', parameters('minecraftLauncherLocation'))]"
+					"commandToExecute": "[concat('bash install.sh ', parameters('minecraftUser'), ' ', parameters('difficulty'), ' ', parameters('level-name'), ' ', parameters('game-mode'), ' ', parameters('white-list'), ' ', parameters('enable-command-block'), ' ', parameters('spawn-monsters'), ' ', parameters('generate-structures'), ' ', uniqueString(resourceGroup().id), ' ', variables('launcher'))]"
 				}
 			}
 		}
