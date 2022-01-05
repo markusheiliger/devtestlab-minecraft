@@ -77,10 +77,10 @@
 					{
 						"name": "minecraft",
 						"properties": {
-							"description": "Minecraft server port",
+							"description": "Minecraft port",
 							"protocol": "Tcp",
 							"sourcePortRange": "*",
-							"destinationPortRange": "25565",
+							"destinationPortRange": "19132",
 							"sourceAddressPrefix": "Internet",
 							"destinationAddressPrefix": "*",
 							"access": "Allow",
