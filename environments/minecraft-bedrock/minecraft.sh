@@ -16,7 +16,7 @@ apt autoremove
 wget -O minecraft.zip https://minecraft.azureedge.net/bin-linux/bedrock-server-1.18.2.03.zip
 
 # unzip minecraft package
-mkdir /bin/minecraft && unzip minecraft.zip -d /bin/minecraft
+mkdir /usr/bin/minecraft && unzip minecraft.zip -d /usr/bin/minecraft
 
 cat << EOF > /etc/systemd/system/minecraft.service
 [Unit]
