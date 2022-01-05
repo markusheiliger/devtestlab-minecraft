@@ -1,10 +1,19 @@
 #!/bin/bash
 
-# upgrade & install packages
+# switch to script folder
+cd $(dirname "$0")
+
+# upgrade packages
 apt update && apt upgrade -y
-apt install -y openjdk-8-jre-headless
-apt install -y screen
 
-# open firewall
-ufw allow 25565
+# install packages
+apt install -y unzip
 
+# remove packages
+apt autoremove
+
+# downloading minecraft bedrock
+wget -O minecraft.zip https://minecraft.azureedge.net/bin-linux/bedrock-server-1.18.2.03.zip
+
+# unzip minecraft package
+mkdir minecraft && unzip minecraft.zip -d minecraft
