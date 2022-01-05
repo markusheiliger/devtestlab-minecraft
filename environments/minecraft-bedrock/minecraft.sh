@@ -17,3 +17,18 @@ wget -O minecraft.zip https://minecraft.azureedge.net/bin-linux/bedrock-server-1
 
 # unzip minecraft package
 mkdir /bin/minecraft && unzip minecraft.zip -d /bin/minecraft
+
+cat << EOF > /etc/systemd/system/minecraft.service
+[Unit]
+Description=Minecraft Service
+After=network.target
+
+[Service]
+Type=Simple
+WorkingDirectory=/bin/minecraft
+ExecStart=/bin/sh -c "LD_LIBRARY_PATH=. ./bedrock_server"
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+EOF
