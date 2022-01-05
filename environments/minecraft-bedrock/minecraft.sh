@@ -25,7 +25,7 @@ After=network.target
 
 [Service]
 Type=Simple
-WorkingDirectory=/bin/minecraft
+WorkingDirectory=/usr/bin/minecraft
 ExecStart=/bin/sh -c "LD_LIBRARY_PATH=. ./bedrock_server"
 Restart=on-failure
 
