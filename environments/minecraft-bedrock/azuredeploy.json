@@ -240,7 +240,27 @@
 				}
 			},
 			"resources": [
-
+				{
+					"type": "extensions",
+					"name": "initialize",
+					"apiVersion": "2019-03-01",
+					"location": "[resourceGroup().location]",
+					"dependsOn": [
+						"[resourceId('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
+					],
+					"properties": {
+						"publisher": "Microsoft.Azure.Extensions",
+						"type": "CustomScript",
+						"typeHandlerVersion": "2.1",
+						"autoUpgradeMinorVersion": true,
+						"settings": {
+							"fileUris": [
+								"[concat(parameters('_artifactsLocation'), '/minecraft.sh', parameters('_artifactsLocationSasToken'))]"
+							],
+							"commandToExecute": "[concat('find ./ -type f -name minecraft.sh -exec bash \"{}\" \\;')]"
+						}
+					}
+				}
 			]
 		}
 	]
