@@ -2,12 +2,6 @@
 	"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
 	"contentVersion": "1.0.0.0",
 	"parameters": {
-		"minecraftUser": {
-			"type": "string",
-			"metadata": {
-				"description": "Your Minecraft user name"
-			}
-		},
 		"Admin Username": {
 			"type": "string",
 			"metadata": {
@@ -18,83 +12,6 @@
 			"type": "securestring",
 			"metadata": {
 				"description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
-			}
-		},
-		"difficulty": {
-			"type": "string",
-			"defaultValue": "1",
-			"allowedValues": [
-				"0",
-				"1",
-				"2",
-				"3"
-			],
-			"metadata": {
-				"description": "0 - Peaceful, 1 - Easy, 2 - Normal, 3 - Hard"
-			}
-		},
-		"enable-command-block": {
-			"type": "string",
-			"defaultValue": "false",
-			"allowedValues": [
-				"false",
-				"true"
-			],
-			"metadata": {
-				"description": "enable command blocks"
-			}
-		},
-		"game-mode": {
-			"type": "string",
-			"defaultValue": "0",
-			"allowedValues": [
-				"0",
-				"1",
-				"2",
-				"3"
-			],
-			"metadata": {
-				"description": "0 - Survival, 1 - Creative, 2 - Adventure, 3 - Spectator"
-			}
-		},
-		"generate-structures": {
-			"type": "string",
-			"defaultValue": "true",
-			"allowedValues": [
-				"false",
-				"true"
-			],
-			"metadata": {
-				"description": "Generates villages etc."
-			}
-		},
-		"level-name": {
-			"type": "string",
-			"defaultValue": "world",
-			"metadata": {
-				"description": "Name of your world"
-			}
-		},
-		"spawn-monsters": {
-			"type": "string",
-			"defaultValue": "true",
-			"allowedValues": [
-				"false",
-				"true"
-			],
-			"metadata": {
-				"description": "Enables monster spawning"
-			}
-		},
-		"white-list": {
-			"type": "string",
-			"defaultValue": "true",
-			"allowedValues": [
-				"false",
-				"true"
-			],
-			"metadata": {
-				"description": "Only ops and whitelisted players can connect"
 			}
 		},
 		"_artifactsLocation": {
