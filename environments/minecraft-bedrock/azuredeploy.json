@@ -1,0 +1,247 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"minecraftUser": {
+			"type": "string",
+			"metadata": {
+				"description": "Your Minecraft user name"
+			}
+		},
+		"Admin Username": {
+			"type": "string",
+			"metadata": {
+				"description": "Admin user name you will use to log on to the Virtual Machine."
+			}
+		},
+		"Admin Password": {
+			"type": "securestring",
+			"metadata": {
+				"description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+			}
+		},
+		"difficulty": {
+			"type": "string",
+			"defaultValue": "1",
+			"allowedValues": [
+				"0",
+				"1",
+				"2",
+				"3"
+			],
+			"metadata": {
+				"description": "0 - Peaceful, 1 - Easy, 2 - Normal, 3 - Hard"
+			}
+		},
+		"enable-command-block": {
+			"type": "string",
+			"defaultValue": "false",
+			"allowedValues": [
+				"false",
+				"true"
+			],
+			"metadata": {
+				"description": "enable command blocks"
+			}
+		},
+		"game-mode": {
+			"type": "string",
+			"defaultValue": "0",
+			"allowedValues": [
+				"0",
+				"1",
+				"2",
+				"3"
+			],
+			"metadata": {
+				"description": "0 - Survival, 1 - Creative, 2 - Adventure, 3 - Spectator"
+			}
+		},
+		"generate-structures": {
+			"type": "string",
+			"defaultValue": "true",
+			"allowedValues": [
+				"false",
+				"true"
+			],
+			"metadata": {
+				"description": "Generates villages etc."
+			}
+		},
+		"level-name": {
+			"type": "string",
+			"defaultValue": "world",
+			"metadata": {
+				"description": "Name of your world"
+			}
+		},
+		"spawn-monsters": {
+			"type": "string",
+			"defaultValue": "true",
+			"allowedValues": [
+				"false",
+				"true"
+			],
+			"metadata": {
+				"description": "Enables monster spawning"
+			}
+		},
+		"white-list": {
+			"type": "string",
+			"defaultValue": "true",
+			"allowedValues": [
+				"false",
+				"true"
+			],
+			"metadata": {
+				"description": "Only ops and whitelisted players can connect"
+			}
+		},
+		"_artifactsLocation": {
+			"type": "string",
+			"defaultValue": "",
+			"metadata": {
+				"description": "The base URI where artifacts required by this template are located. For example, if stored on a public GitHub repo, you'd use the following URI: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/minecraft-on-ubuntu/."
+			}
+		},
+		"_artifactsLocationSasToken": {
+			"type": "string",
+			"defaultValue": "",
+			"metadata": {
+				"description": "The sasToken required to access _artifactsLocation.  If your artifacts are stored on a public repo or public storage account you can leave this blank."
+			}
+		}
+	},
+	"variables": {
+		"imageOffer": "UbuntuServer",
+		"imagePublisher": "Canonical",
+		"imageVersion": "18.04-LTS",
+
+		"resourcePrefix": "[concat('mc-', uniqueString(resourceGroup().id))]",
+		"nsgName": "[concat(variables('resourcePrefix'), 'nsg')]",
+		"nicName": "[concat(variables('resourcePrefix'), 'nic')]",
+		"pipName": "[concat(variables('resourcePrefix'), 'pip')]",
+		"vmName": "[concat(variables('resourcePrefix'), 'vm')]",
+
+		"launcher": "https://launcher.mojang.com/v1/objects/a16d67e5807f57fc4e550299cf20226194497dc2/server.jar"
+	},
+	"resources": [
+		{
+			"apiVersion": "2020-11-01",
+			"type": "Microsoft.Network/publicIPAddresses",
+			"name": "[variables('pipName')]",
+			"location": "[resourceGroup().location]",
+			"properties": {
+				"publicIPAllocationMethod": "Dynamic",
+				"dnsSettings": {
+					"domainNameLabel": "[toLower(variables('resourcePrefix'))]"
+				}
+			}
+		},
+		{
+			"apiVersion": "2020-11-01",
+			"type": "Microsoft.Network/networkSecurityGroups",
+			"name": "[variables('nsgName')]",
+			"location": "[resourceGroup().location]",
+			"properties": {
+				"securityRules": [
+					{
+						"name": "ssh",
+						"properties": {
+							"description": "SSH port",
+							"protocol": "Tcp",
+							"sourcePortRange": "*",
+							"destinationPortRange": "22",
+							"sourceAddressPrefix": "Internet",
+							"destinationAddressPrefix": "*",
+							"access": "Allow",
+							"priority": 100,
+							"direction": "Inbound"
+						}
+					},
+					{
+						"name": "minecraft",
+						"properties": {
+							"description": "Minecraft server port",
+							"protocol": "Tcp",
+							"sourcePortRange": "*",
+							"destinationPortRange": "25565",
+							"sourceAddressPrefix": "Internet",
+							"destinationAddressPrefix": "*",
+							"access": "Allow",
+							"priority": 101,
+							"direction": "Inbound"
+						}
+					}
+				]
+			}
+		},
+		{
+			"apiVersion": "2020-11-01",
+			"type": "Microsoft.Network/networkInterfaces",
+			"name": "[variables('nicName')]",
+			"location": "[resourceGroup().location]",
+			"dependsOn": [
+				"[resourceId('Microsoft.Network/publicIPAddresses/', variables('pipName'))]"
+			],
+			"properties": {
+				"ipConfigurations": [
+					{
+						"name": "ipconfig1",
+						"properties": {
+							"privateIPAllocationMethod": "Dynamic",
+							"publicIPAddress": {
+								"id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('pipName'))]"
+							},
+							"subnet": {
+								"id": "$(LabSubnetId)"
+							}
+						}
+					}
+				]
+			}
+		},
+		{
+			"apiVersion": "2020-12-01",
+			"type": "Microsoft.Compute/virtualMachines",
+			"name": "[variables('vmName')]",
+			"location": "[resourceGroup().location]",
+			"dependsOn": [
+				"[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
+			],
+			"properties": {
+				"hardwareProfile": {
+					"vmSize": "Standard_D2s_v3"
+				},
+				"osProfile": {
+					"computerName": "[variables('vmName')]",
+					"adminUsername": "[parameters('Admin Username')]",
+					"adminPassword": "[parameters('Admin Password')]"
+				},
+				"storageProfile": {
+					"imageReference": {
+						"publisher": "[variables('imagePublisher')]",
+						"offer": "[variables('imageOffer')]",
+						"sku": "[variables('imageVersion')]",
+						"version": "latest"
+					},
+					"osDisk": {
+						"caching": "ReadWrite",
+						"createOption": "FromImage",
+						"diskSizeGB": 100
+					}
+				},
+				"networkProfile": {
+					"networkInterfaces": [
+						{
+							"id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
+						}
+					]
+				}
+			},
+			"resources": [
+
+			]
+		}
+	]
+}
